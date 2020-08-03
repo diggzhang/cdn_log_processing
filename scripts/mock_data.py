@@ -56,15 +56,15 @@ def cdn_traffic_mock(records, headers, date_is):
         for i in range(records):
             random_time = date_is - datetime.timedelta(hours=random.randint(0,23))
             row = {
-                "datetime": random_time.strftime("[%d/%B/%Y:%H:%M:%S +0800]"),
+                "datetime": random_time.strftime("[%d/%b/%Y:%H:%M:%S +0800]"),
                 "ip": fake.ipv4_public(),
                 "proxy_ip":"-",
                 "responsetime": random.randint(100, 2000),
                 "referer": "-",
                 "method": "GET",
                 "url": "http://www.aliyun.com/" + fake.uri_page() + fake.uri_extension(),
-                "httpcode": [200, 404, 500][random.randint(0,2)],
-                "requestsize": random.randint(100, 2000),
+                "httpcode": [200, 404, 500, 204][random.randint(0,4)],
+                "requestsize": random.randint(100, 1000),
                 "responsesize": random.randint(1000, 2000),
                 "cache": "MISS",
                 "ua": ua.random,

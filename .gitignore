@@ -2,3 +2,5 @@ mock_cdn_data.csv
 .idea
 target
 out
+scripts/*.txt
+scripts/*.bak

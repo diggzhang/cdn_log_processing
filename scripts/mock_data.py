@@ -50,11 +50,11 @@ CDN_HEADER = [
 ]
 
 
-def cdn_traffic_mock(records, headers, date_is):
+def cdn_traffic_mock(records, headers, date_is, is_dirty_records):
     with open("mock_cdn_data.csv", 'a+') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=headers)
-        for i in range(records):
-            random_time = date_is - datetime.timedelta(hours=random.randint(0,23))
+        for i in range(0, records):
+            random_time = date_is - datetime.timedelta(hours=random.randint(0,12))
             row = {
                 "datetime": random_time.strftime("[%d/%b/%Y:%H:%M:%S +0800]"),
                 "ip": fake.ipv4_public(),
@@ -63,10 +63,10 @@ def cdn_traffic_mock(records, headers, date_is):
                 "referer": "-",
                 "method": "GET",
                 "url": "http://www.aliyun.com/" + fake.uri_page() + fake.uri_extension(),
-                "httpcode": [200, 404, 500, 204][random.randint(0,4)],
+                "httpcode": [200, 404, 500, 204][random.randint(0, 3)],
                 "requestsize": random.randint(100, 1000),
-                "responsesize": random.randint(1000, 2000),
-                "cache": "MISS",
+                "responsesize": 'YesDirtyData' if is_dirty_records == True else random.randint(1000, 2000),
+                "cache": ["MISS", "HIT"][random.randint(0, 1)],
                 "ua": ua.random,
                 "filetype": "text/html"
             }
@@ -81,7 +81,12 @@ def time_range_generator(how_many_days):
     return date_list
 
 if __name__ == '__main__':
-    records = 3000
+    #records = 923076
+    records = 900
 
-    for date_is in time_range_generator(120):
-        cdn_traffic_mock(records, CDN_HEADER, date_is)
+    for date_is in time_range_generator(1):
+        cdn_traffic_mock(records, CDN_HEADER, date_is, False)
+
+    dirty_records = 24
+    for date_is in time_range_generator(1):
+        cdn_traffic_mock(dirty_records, CDN_HEADER, date_is, True)

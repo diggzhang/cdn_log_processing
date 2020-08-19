@@ -147,8 +147,8 @@ public class CDNLogCleaningDriver extends Configured implements Tool {
             }
 
             if (!logIsDirty) {
-                Counter dirtyItemCounter = context.getCounter("logs", "success");
-                dirtyItemCounter.increment(1);
+                Counter successItemCounter = context.getCounter("logs", "success");
+                successItemCounter.increment(1);
             }
             // 处理清洗字段-
 
@@ -161,7 +161,6 @@ public class CDNLogCleaningDriver extends Configured implements Tool {
             String cacheStatus = split[10];
             String ua = split[11];
             String fileType = split[12];
-
 
             CDNAccessLog cdnAccessLog = new CDNAccessLog();
 

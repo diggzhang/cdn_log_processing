@@ -17,13 +17,18 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.xingze.etl.utils.FileUtils;
 import org.xingze.etl.utils.IpUtil;
+import org.xingze.etl.utils.MySQLJDBCUtil;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import static org.xingze.etl.MysqlTest.insertEtlLog;
 
 
 public class CDNLogCleaningDriver extends Configured implements Tool {
@@ -71,11 +76,23 @@ public class CDNLogCleaningDriver extends Configured implements Tool {
             Counter total = counters.findCounter("logs", "total");
             Counter dirty = counters.findCounter("logs", "dirty");
             Counter success = counters.findCounter("logs", "success");
-            System.out.println(timeMillisTaskStart + " "
-                    + timeMillisTaskEnd
-                    + " " + total.getValue()
-                    + " " + dirty.getValue()
-                    + " " + success.getValue());
+
+
+            // create a new connection from MySQLJDBCUtil
+            try (Connection conn = MySQLJDBCUtil.getConnection()) {
+
+                System.out.println(String.format("Connected to database %s "
+                        + "successfully.", conn.getCatalog()));
+
+                insertEtlLog((long)timeMillisTaskStart,
+                        (int)total.getValue(),
+                        (int)success.getValue(),
+                        (int)dirty.getValue());
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+
+            }
+
             return 0;
         } else {
             return 1;
@@ -119,9 +136,8 @@ public class CDNLogCleaningDriver extends Configured implements Tool {
                 Counter dirtyItemCounter = context.getCounter("logs", "dirty");
                 dirtyItemCounter.increment(1);
                 logIsDirty = true;
-                e.printStackTrace();
-            } finally {
                 responseSize = 0L;
+                e.printStackTrace();
             }
 
             String parserIp = IpUtil.parserIp(ip);

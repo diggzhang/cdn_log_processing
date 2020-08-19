@@ -1,12 +1,5 @@
 package org.xingze.etl;
 
-
-
-import org.apache.hadoop.io.Writable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 /**
  * @program: G9-02
  * @author: huzekang

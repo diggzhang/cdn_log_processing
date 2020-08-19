@@ -1,12 +1,9 @@
 package org.xingze.etl;
 
-import com.amazonaws.services.waf.model.SampledHTTPRequest;
-import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -18,23 +15,15 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.xingze.etl.utils.FileUtils;
 import org.xingze.etl.utils.IpUtil;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 
 public class CDNLogCleaningDriver extends Configured implements Tool {
@@ -191,6 +180,4 @@ public class CDNLogCleaningDriver extends Configured implements Tool {
 
         }
     }
-
-
 }
